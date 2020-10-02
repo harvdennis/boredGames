@@ -1,0 +1,35 @@
+.LoaderBalls {
+    position: relative;
+    display: flex;
+    margin: auto;
+    bottom: 0px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.LoaderBalls__item {
+    border-radius: 50%;
+    background: #34b7eb;
+}
+
+#LoaderBalls1 {
+    animation: bouncing 0.4s cubic-bezier(0.6, 0.05, 0.15, 0.95) 0s infinite alternate;
+}
+
+#LoaderBalls2 {
+    animation: bouncing 0.4s cubic-bezier(0.6, 0.05, 0.15, 0.95) 0.1s infinite alternate;
+}
+
+#LoaderBalls3 {
+    animation: bouncing 0.4s cubic-bezier(0.6, 0.05, 0.15, 0.95) 0.2s infinite alternate;
+}
+
+@keyframes bouncing {
+    0% {
+        transform: translate3d(0, 10px, 0) scale(1.2, 0.85);
+    }
+
+    100% {
+        transform: translate3d(0, -20px, 0) scale(0.9, 1.1);
+    }
+}

@@ -1,0 +1,147 @@
+.chessboard {
+    position: relative;
+    width: 80vw;
+    height: 80vw;
+    max-width: 85vh;
+    max-height: 85vh;
+    border: solid 5px #34b7eb;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.black {
+    flex-flow: row-reverse wrap-reverse;
+}
+
+.peice {
+    cursor: pointer;
+    height: 100%;
+    width: 100%;
+    transform: scale(2);
+}
+
+.peice img {
+    transform-origin: center;
+    cursor: pointer;
+    height: 100%;
+    width: 100%;
+    transform: scale(2);
+}
+
+.btn {
+    color: white;
+    text-decoration: none;
+    background-color: #34b7eb;
+    outline: none;
+    border: none;
+    overflow: hidden;
+    border-radius: 5px;
+    font-size: 1.2rem;
+    box-shadow: none;
+    padding: 0.75rem;
+    margin: 0.25rem;
+    transition: all ease 0.3s;
+}
+
+.btn:hover {
+    box-shadow: 0px 0px 10px 3px rgba(0, 0, 0, 0.4);
+}
+
+.alert {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.endScreen {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    left: 0px;
+    bottom: 0px;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(1, 33, 138, 0.356);
+    z-index: 10;
+    text-align: center;
+}
+
+.endScreen h3 {
+    margin: 1rem;
+    margin-top: 45vh;
+}
+
+.invisible {
+    display: none;
+}
+
+.promotion {
+    position: absolute;
+    display: flex;
+    flex-wrap: wrap;
+    width: 20%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.bRook {
+    background: url('./chess-peices/br.svg');
+    background-size: cover;
+}
+
+.bKnight {
+    background: url('./chess-peices/bn.svg');
+    background-size: cover;
+}
+
+.bBishop {
+    background: url('./chess-peices/bb.svg');
+    background-size: cover;
+}
+
+.bQueen {
+    background: url('./chess-peices/bq.svg');
+    background-size: cover;
+}
+
+.bKing {
+    background: url('./chess-peices/bk.svg');
+    background-size: cover;
+}
+
+.bPawn {
+    background: url('./chess-peices/bp.svg');
+    background-size: cover;
+}
+
+.wRook {
+    background: url('./chess-peices/wr.svg');
+    background-size: cover;
+}
+
+.wKnight {
+    background: url('./chess-peices/wn.svg');
+    background-size: cover;
+}
+
+.wBishop {
+    background: url('./chess-peices/wb.svg');
+    background-size: cover;
+}
+
+.wQueen {
+    background: url('./chess-peices/wq.svg');
+    background-size: cover;
+}
+
+.wKing {
+    background: url('./chess-peices/wk.svg');
+    background-size: cover;
+}
+
+.wPawn {
+    background: url('./chess-peices/wp.svg');
+    background-size: cover;
+}

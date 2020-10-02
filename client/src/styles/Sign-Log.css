@@ -1,0 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@800&display=swap');
+
+.log-sign {
+    z-index: 1;
+    width: 100%;
+    height: 100vh;
+    background-image: url('./loginBG.svg');
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+.form-contain {
+    background-color: white;
+    position: relative;
+    height: 100vh;
+    width: 50%;
+    max-width: 800px;
+    float: right;
+}
+
+.bishop {
+    position: absolute;
+    left: 0px;
+    transform: translate(-50%, 0);
+    height: 100vh;
+    z-index: 5;
+}
+
+#bishop-path {
+    fill: black;
+}
+
+.form-title {
+    top: 10%;
+    left: 18%;
+    position: absolute;
+    font-size: 2rem;
+    color: #34b7eb;
+    font-weight: 500;
+    z-index: 10;
+}
+
+.log-title {
+    position: absolute;
+    z-index: 10;
+    font-family: 'Poppins', sans-serif;
+    font-size: 4rem;
+    float: left;
+    color: white;
+    font-weight: 800;
+    padding: 1rem 2rem;
+    text-shadow: 0px 4px rgba(0, 0, 0, 0.3);
+}

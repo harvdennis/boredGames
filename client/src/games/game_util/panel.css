@@ -1,0 +1,30 @@
+.chessPanel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 12.5%;
+    height: 12.5%;
+    max-width: 12.5%;
+    max-height: 12.5%;
+    overflow: hidden;
+}
+
+.white {
+    background-color: white;
+}
+
+.silver {
+    background-color: silver;
+}
+
+.highlighted {
+    background-color: rgba(17, 174, 236, 0.3);
+}
+
+.peice-container {
+    transform-origin: center;
+    position: absolute;
+    width: 50%;
+    height: 50%;
+}
