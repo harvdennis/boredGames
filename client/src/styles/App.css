@@ -20,6 +20,7 @@
 
 .BG {
     width: 100%;
+    min-height: auto;
     height: 100vh;
     background-color: #1f305b;
 }
@@ -248,4 +249,20 @@ h3 {
 
 .searchedFriend button:hover {
     box-shadow: 0px 1px 15px 8px rgba(0, 0, 0, 0.4);
+}
+
+@media only screen and (max-width: 800px) {
+    .people {
+        display: none;
+        width: 100%;
+    }
+
+    .profile {
+        display: none;
+    }
+    .contain {
+        position: relative;
+        width: 95%;
+        margin: 0 auto 0 auto;
+    }
 }

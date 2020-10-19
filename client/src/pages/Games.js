@@ -4,10 +4,6 @@ import './../styles/games.css';
 import chess from './game-imgs/chess.PNG';
 
 class Games extends Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         return (
             <div className="gamesBG">

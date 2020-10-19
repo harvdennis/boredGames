@@ -35,6 +35,8 @@ class Chessgame extends Component {
             won: false,
             draw: false,
             inCheck: false,
+            onlinePlayers: 0,
+            roomCode: '',
         };
     }
 
@@ -87,11 +89,25 @@ class Chessgame extends Component {
             this.gameOver(this.chess);
             this.check(this.chess);
         });
+
+        socket.on('numOnline', (num) => {
+            this.setState({ onlinePlayers: num });
+        });
     }
 
     componentWillUnmount() {
         socket.emit('disconnected');
     }
+
+    handleChange = (e) => {
+        this.setState({
+            [e.target.name]: e.target.value,
+        });
+    };
+
+    joinCustom = (e) => {
+        e.preventDefault();
+    };
 
     onlineMove(move) {
         this.chess.load(move);
@@ -170,7 +186,7 @@ class Chessgame extends Component {
         } else if (chess.in_stalemate()) {
             this.setState({ draw: true });
         }
-    } 
+    }
 
     check(chess) {
         if (chess.in_check()) {
@@ -204,6 +220,22 @@ class Chessgame extends Component {
                 const user = this.state.user;
                 const room = 'chess';
                 socket.emit('waiting', { user, room });
+            }
+        };
+
+        const stopSearch = () => {
+            if (this.state.joinedRoom) {
+                const user = this.state.user;
+                const room = 'chess';
+                socket.emit('stopSearch', { user, room });
+            }
+        };
+
+        const createCustom = () => {
+            if (this.state.joinedRoom) {
+                const user = this.state.user;
+                const room = 'chess';
+                socket.emit('createCustom', { user, room });
             }
         };
 
@@ -427,13 +459,19 @@ class Chessgame extends Component {
             );
         } else {
             return (
-                <div>
-                    {this.state.user && (
+                <div style={{ textAlign: 'center' }}>
+                    {this.state.user && !this.state.loading && (
                         <button className="btn" onClick={newGame}>
                             Find Match
                         </button>
                     )}
-                    {this.state.loading && <h3>Loading...</h3>}
+                    {this.state.user && this.state.loading && (
+                        <button className="btn" onClick={stopSearch}>
+                            Cancel search
+                        </button>
+                    )}
+                    {this.state.loading && <h3 className="load">Loading...</h3>}
+                    <h4 style={{ marginBottom: '1rem' }}>Players online: {this.state.onlinePlayers}</h4>
                 </div>
             );
         }

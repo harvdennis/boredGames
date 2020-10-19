@@ -52,8 +52,8 @@ export class signup extends Component {
                 <h1 className="log-title">boredGames</h1>
                 <div className="form-contain">
                     <img src={bishop} className="bishop" />
-                    <h3 className="form-title">Sign Up</h3>
                     <form noValidate onSubmit={this.handleSubmit}>
+                        <h3 className="form-title">Sign Up</h3>
                         <div className={errors.email || errors.general ? 'error field' : 'field'}>
                             <input value={this.state.email} id="email" type="email" name="email" className="input" placeholder=" " onChange={this.handleChange} />
                             <label htmlFor="email" className="label">

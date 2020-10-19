@@ -11,6 +11,7 @@ const path = require('path');
 sockets = {};
 people = {};
 peopleWaiting = {};
+customRooms = {};
 
 app.use(
     bodyParser.urlencoded({
@@ -36,13 +37,25 @@ function roomMatch(room, ownId) {
     return false;
 }
 
+function generateRoom() {
+    var result = '';
+    var characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for (var i = 0; i < 6; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+}
+
 function getARoom(user1, user2) {
     return '' + user1.name + '' + user2.name + '';
 }
 
 io.on('connection', (socket) => {
     socket.on('joinRoom', ({ user, room }) => {
+        socket.join(room);
         people[socket.id] = { name: user, room: room };
+        io.in(room).emit('numOnline', Object.keys(people).length);
         socket.emit('joinedRoom', true);
     });
     socket.on('waiting', ({ user, room }) => {
@@ -54,7 +67,7 @@ io.on('connection', (socket) => {
             let opponentId = roomMatch(room, socket.id);
             console.log(socket.id, opponentId);
 
-            if (opponentId) { 
+            if (opponentId) {
                 let opponent = peopleWaiting[opponentId];
                 let room = getARoom(peopleWaiting[socket.id], opponent);
 
@@ -74,6 +87,12 @@ io.on('connection', (socket) => {
         }
     });
 
+    socket.on('stopSearch', ({ user, room }) => {
+        delete peopleWaiting[socket.id];
+        delete sockets[socket.id];
+        socket.emit('loading', false);
+    });
+
     socket.on('sendMove', ({ currentmove, matchRoom }) => {
         socket.to(matchRoom).emit('sendMove', currentmove);
     });
@@ -82,14 +101,12 @@ io.on('connection', (socket) => {
         delete people[socket.id];
         delete peopleWaiting[socket.id];
         delete sockets[socket.id];
-        console.log('disconnect');
     });
 
     socket.on('disconnected', function () {
         delete people[socket.id];
         delete peopleWaiting[socket.id];
         delete sockets[socket.id];
-        console.log('disconnected');
     });
 });
 

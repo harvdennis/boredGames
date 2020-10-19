@@ -17,6 +17,7 @@
 }
 
 .buttn {
+    display: inline-block;
     background-color: rgba(0, 0, 0, 0.1);
     border: 7px solid white;
     border-radius: 25px;
@@ -25,21 +26,45 @@
     font-weight: 600;
     font-size: 3rem;
     padding: 20px 0px;
-    width: 225px;
-    margin-top: 5vh;
+    width: 250px;
+    margin: 5vh 3% 0 3%;
 }
 
-#sign {
-    float: right;
-}
-
-#log {
-    float: left;
+.buttn a {
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+    font-size: 3rem;
 }
 
 .title {
     color: white;
     font-family: 'Poppins', sans-serif;
     font-size: 5rem;
-    margin-bottom: 15vh;
+    margin-bottom: 10vh;
+}
+
+@media only screen and (max-width: 900px) {
+    .conatain {
+        display: block;
+    }
+
+    .buttn {
+        display: inline-block;
+        background-color: rgba(0, 0, 0, 0.1);
+        border: 7px solid white;
+        border-radius: 25px;
+        text-decoration: none;
+        color: white;
+        font-weight: 600;
+        font-size: 3rem;
+        padding: 20px 0px;
+        width: 100%;
+        margin: 5vh 0 0 0;
+    }
+
+    .title {
+        margin-bottom: 5vh;
+        font-size: calc(1rem + 5vw);
+    }
 }
