@@ -1,12 +1,9 @@
-import { SET_FRIEND, SET_FRIENDS, SEARCH_FRIEND, IS_FRIEND, NOT_FRIEND, SET_ERRORS, CLEAR_ERRORS, LOADING_UI, APPEND_FRIEND, UPDATE_STATUS } from '../types';
-import axios from 'axios';
+import { SET_FRIEND, SET_FRIENDS, SEARCH_FRIEND, IS_FRIEND, NOT_FRIEND, SET_ERRORS, CLEAR_ERRORS, LOADING_UI, APPEND_FRIEND } from '../types';
 import firebase from './../../services/util/config';
 import 'firebase/auth';
 import 'firebase/firestore';
-import { validateSignupData, validateLoginData, reduceUserDetails } from './../../services/util/validators';
 
 const db = firebase.firestore();
-const auth = firebase.auth();
 const realdb = firebase.database();
 
 export const checkFriend = (friend) => (dispatch) => {

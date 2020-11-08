@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import AppHome from './pages/AppHome';
 import Games from './pages/Games';
 import chess from './games/chess/Chessgame';
+import connect4 from './games/connect4/Connectgame';
 import AuthRoute from './util/AuthRoute';
 import AuthedRoute from './util/AuthedRoute';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
@@ -16,6 +17,7 @@ import { SET_AUTHENTICATED } from './redux/types';
 import { getUserData, logoutUser } from './redux/actions/userActions';
 import { getFriends } from './redux/actions/friendActions';
 import firebase from './services/util/config';
+import { connect } from 'socket.io-client';
 
 const db = firebase.firestore();
 const oldRealTimeDb = firebase.database();
@@ -72,6 +74,7 @@ function App() {
                         <AuthedRoute exact path="/app" component={AppHome} />
                         <AuthedRoute exact path="/games" component={Games} />
                         <AuthedRoute path="/games/chess" component={chess} />
+                        <AuthedRoute path="/games/connect" component={connect4} />
                     </div>
                 </div>
             </Router>

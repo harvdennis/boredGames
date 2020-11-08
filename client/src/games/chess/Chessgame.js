@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Chessboard from './chessboard';
 import './chessboard.css';
 import { Link } from 'react-router-dom';
+import { setOpponent } from '../../redux/actions/opponentActions';
 
 import io from 'socket.io-client';
 import PropTypes from 'prop-types';
@@ -12,8 +13,8 @@ const Chess = require('chess.js');
 let socket;
 
 class Chessgame extends Component {
-    constructor(props) {
-        super(props);
+    constructor() {
+        super();
         this.chess = null;
         this.checkingMove = null;
 
@@ -24,6 +25,7 @@ class Chessgame extends Component {
             peicePanel: null,
             currentFen: null,
             user: null,
+            opponent: {},
             joinedRoom: false,
             joinedMatch: false,
             matchRoom: null,
@@ -80,8 +82,9 @@ class Chessgame extends Component {
             console.log(`joined match ${room}`);
         });
 
-        socket.on('player', (colour) => {
-            this.setState({ player: colour });
+        socket.on('player', (player) => {
+            this.setState({ player: player.colour });
+            this.gameOpponent(player.opp);
         });
 
         socket.on('sendMove', (move) => {
@@ -105,9 +108,9 @@ class Chessgame extends Component {
         });
     };
 
-    joinCustom = (e) => {
-        e.preventDefault();
-    };
+    gameOpponent(user) {
+        this.props.setOpponent(user);
+    }
 
     onlineMove(move) {
         this.chess.load(move);
@@ -197,6 +200,19 @@ class Chessgame extends Component {
         }
     }
 
+    choosePromo(peice) {
+        this.chess.move({
+            from: this.state.prevMove[0],
+            to: this.state.prevMove[1],
+            promotion: peice,
+        });
+        this.setState({ promo: false });
+        let currentmove = this.chess.fen();
+        let matchRoom = this.state.matchRoom;
+        socket.emit('sendMove', { currentmove, matchRoom });
+        this.setState({ currentFen: this.chess.fen() });
+    }
+
     checkPromo(fromPan) {
         const xAxis = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
         const yAxis = ['8', '7', '6', '5', '4', '3', '2', '1'];
@@ -228,14 +244,6 @@ class Chessgame extends Component {
                 const user = this.state.user;
                 const room = 'chess';
                 socket.emit('stopSearch', { user, room });
-            }
-        };
-
-        const createCustom = () => {
-            if (this.state.joinedRoom) {
-                const user = this.state.user;
-                const room = 'chess';
-                socket.emit('createCustom', { user, room });
             }
         };
 
@@ -357,22 +365,31 @@ class Chessgame extends Component {
         if (this.state.joinedMatch) {
             return (
                 <div>
-                    <Chessboard getPeice={getPeice} player={this.state.player} onMove={handleMove} handleDrag={handleDrag} currentFen={this.state.currentFen} />
+                    <div className="boardContainer">
+                        <ul className="playerDetails">
+                            <li>
+                                <img src={this.props.opponent.opponent.imageUrl} alt="icon" className="gameIcon" />
+                            </li>
+                            <li>
+                                <a className="gameHandle"> {this.props.opponent.opponent.handle}</a>
+                            </li>
+                        </ul>
+                        <Chessboard getPeice={getPeice} player={this.state.player} onMove={handleMove} handleDrag={handleDrag} currentFen={this.state.currentFen} />
+                        <ul className="playerDetails">
+                            <li>
+                                <img src={this.props.user.credentials.imageUrl} alt="icon" className="gameIcon" />
+                            </li>
+                            <li>
+                                <a className="gameHandle"> {this.props.user.credentials.handle}</a>
+                            </li>
+                        </ul>
+                    </div>
                     {this.state.promo && (
                         <div className="promotion">
                             <button
                                 className="btn"
                                 onClick={() => {
-                                    this.chess.move({
-                                        from: this.state.prevMove[0],
-                                        to: this.state.prevMove[1],
-                                        promotion: 'q',
-                                    });
-                                    this.setState({ promo: false });
-                                    let currentmove = this.chess.fen();
-                                    let matchRoom = this.state.matchRoom;
-                                    socket.emit('sendMove', { currentmove, matchRoom });
-                                    this.setState({ currentFen: this.chess.fen() });
+                                    this.choosePromo('q');
                                 }}
                             >
                                 Queen
@@ -380,16 +397,7 @@ class Chessgame extends Component {
                             <button
                                 className="btn"
                                 onClick={() => {
-                                    this.chess.move({
-                                        from: this.state.prevMove[0],
-                                        to: this.state.prevMove[1],
-                                        promotion: 'r',
-                                    });
-                                    this.setState({ promo: false });
-                                    let currentmove = this.chess.fen();
-                                    let matchRoom = this.state.matchRoom;
-                                    socket.emit('sendMove', { currentmove, matchRoom });
-                                    this.setState({ currentFen: this.chess.fen() });
+                                    this.choosePromo('r');
                                 }}
                             >
                                 Rook
@@ -397,16 +405,7 @@ class Chessgame extends Component {
                             <button
                                 className="btn"
                                 onClick={() => {
-                                    this.chess.move({
-                                        from: this.state.prevMove[0],
-                                        to: this.state.prevMove[1],
-                                        promotion: 'b',
-                                    });
-                                    this.setState({ promo: false });
-                                    let currentmove = this.chess.fen();
-                                    let matchRoom = this.state.matchRoom;
-                                    socket.emit('sendMove', { currentmove, matchRoom });
-                                    this.setState({ currentFen: this.chess.fen() });
+                                    this.choosePromo('b');
                                 }}
                             >
                                 Bishop
@@ -414,16 +413,7 @@ class Chessgame extends Component {
                             <button
                                 className="btn"
                                 onClick={() => {
-                                    this.chess.move({
-                                        from: this.state.prevMove[0],
-                                        to: this.state.prevMove[1],
-                                        promotion: 'n',
-                                    });
-                                    this.setState({ promo: false });
-                                    let currentmove = this.chess.fen();
-                                    let matchRoom = this.state.matchRoom;
-                                    socket.emit('sendMove', { currentmove, matchRoom });
-                                    this.setState({ currentFen: this.chess.fen() });
+                                    this.choosePromo('n');
                                 }}
                             >
                                 Knight
@@ -480,10 +470,13 @@ class Chessgame extends Component {
 
 const mapStateToProps = (state) => ({
     user: state.user,
+    opponent: state.opponent,
 });
 
 Chessgame.propTypes = {
     user: PropTypes.object.isRequired,
+    opponent: PropTypes.object.isRequired,
+    setOpponent: PropTypes.func.isRequired,
 };
 
-export default connect(mapStateToProps)(Chessgame);
+export default connect(mapStateToProps, { setOpponent })(Chessgame);

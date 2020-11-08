@@ -1,7 +1,16 @@
+.boardContainer {
+    display: flex;
+    height: 100vh;
+    text-align: center;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
 .chessboard {
     position: relative;
-    width: 80vw;
-    height: 80vw;
+    width: 90vw;
+    height: 90vw;
     max-width: 85vh;
     max-height: 85vh;
     border: solid 5px #34b7eb;
@@ -41,6 +50,31 @@
     padding: 0.75rem;
     margin: 0.5rem;
     transition: all ease 0.3s;
+}
+
+.playerDetails {
+    width: 30%;
+    height: 10vw;
+    max-height: 50px;
+    margin: auto;
+    display: flex;
+    justify-content: space-around;
+}
+
+.playerDetails li {
+    display: inline-block;
+    height: 50px;
+}
+
+.gameIcon {
+    width: 10vw;
+    height: 10vw;
+    max-width: 50px;
+    max-height: 50px;
+}
+
+.gameHandle {
+    font-size: calc(12px + 2vw);
 }
 
 .btn:hover {
@@ -155,4 +189,10 @@
 .wPawn {
     background: url('./chess-peices/wp.svg');
     background-size: cover;
+}
+
+@media only screen and (max-width: 600px) {
+    .boardContainer {
+        height: 80vh;
+    }
 }

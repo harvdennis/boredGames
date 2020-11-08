@@ -3,6 +3,7 @@ import thunk from 'redux-thunk';
 import userReducer from './reducers/userReducer';
 import uiReducer from './reducers/uiReducer';
 import friendReducer from './reducers/friendReducer';
+import opponentReducer from './reducers/opponentReducer';
 
 const initialState = {};
 
@@ -12,6 +13,7 @@ const reducers = combineReducers({
     user: userReducer,
     friends: friendReducer,
     UI: uiReducer,
+    opponent: opponentReducer,
 });
 
 const composeEnhancers =

@@ -28,23 +28,12 @@ app.get('/*', (req, res) => {
 });
 
 function roomMatch(room, ownId) {
-    let i = 0;
     for (socketId in peopleWaiting) {
         if (peopleWaiting[socketId].room === room && ownId !== socketId) {
             return socketId;
         }
     }
     return false;
-}
-
-function generateRoom() {
-    var result = '';
-    var characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
-    var charactersLength = characters.length;
-    for (var i = 0; i < 6; i++) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
 }
 
 function getARoom(user1, user2) {
@@ -65,8 +54,6 @@ io.on('connection', (socket) => {
         let size = Object.keys(peopleWaiting).length;
         if (size > 1) {
             let opponentId = roomMatch(room, socket.id);
-            console.log(socket.id, opponentId);
-
             if (opponentId) {
                 let opponent = peopleWaiting[opponentId];
                 let room = getARoom(peopleWaiting[socket.id], opponent);
@@ -76,8 +63,8 @@ io.on('connection', (socket) => {
 
                 io.sockets.in(room).emit('joinedMatch', room);
 
-                socket.to(room).emit('player', 'white');
-                socket.emit('player', 'black');
+                socket.to(room).emit('player', { colour: 'white', opp: peopleWaiting[socket.id].name });
+                socket.emit('player', { colour: 'black', opp: opponent.name });
 
                 delete peopleWaiting[socket.id];
                 delete peopleWaiting[opponentId];
@@ -87,7 +74,7 @@ io.on('connection', (socket) => {
         }
     });
 
-    socket.on('stopSearch', ({ user, room }) => {
+    socket.on('stopSearch', () => {
         delete peopleWaiting[socket.id];
         delete sockets[socket.id];
         socket.emit('loading', false);

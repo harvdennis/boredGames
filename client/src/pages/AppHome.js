@@ -99,6 +99,11 @@ export class AppHome extends Component {
                                 <img src={chess} alt="chess" className="selector-img" />
                             </div>
                         </Link>
+                        <Link to="/games/connect" className="game-link">
+                            <div className="selector">
+                                <img src={chess} alt="chess" className="selector-img" />
+                            </div>
+                        </Link>
                     </div>
                     <Link to="/games">
                         <button className="moreGames">See All Games</button>
