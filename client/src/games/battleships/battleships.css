@@ -1,0 +1,205 @@
+.battlefield {
+    margin: 10px;
+    width: 35vw;
+    height: 35vw;
+    max-width: 500px;
+    max-height: 500px;
+    border: solid 5px #34b7eb;
+    display: flex;
+    flex-wrap: wrap;
+    flex-flow: column wrap;
+}
+
+.homeBattlefield {
+    float: left;
+}
+
+.homeBattlefield h3 {
+    margin-left: 5%;
+    color: #333;
+}
+
+.deploy {
+    float: right;
+}
+
+#oppBoard {
+    float: right;
+}
+
+#oppBoard h3 {
+    color: #333;
+}
+
+.nonValid {
+    border: solid 5px orangered;
+}
+
+.shipPanel {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    width: 3.5vw;
+    height: 3.5vw;
+    max-width: 50px;
+    max-height: 50px;
+    background-color: #eee;
+    outline: 1px solid #333;
+}
+
+#dockDestroyer {
+    margin: 10%;
+    display: flex;
+    justify-content: space-around;
+    background-color: white;
+    outline: none;
+}
+#dockSubmarine {
+    margin: 10%;
+    display: flex;
+    justify-content: space-around;
+    background-color: white;
+    outline: none;
+}
+#dockCruiser {
+    margin: 10%;
+    display: flex;
+    justify-content: space-around;
+    background-color: white;
+    outline: none;
+}
+#dockBattleship {
+    margin: 10%;
+    display: flex;
+    justify-content: space-around;
+    background-color: white;
+    outline: none;
+}
+
+#dockCarrier {
+    margin: 10%;
+    display: flex;
+    justify-content: space-around;
+    background-color: white;
+    outline: none;
+}
+.ships {
+    width: 20vw;
+    height: 90vh;
+    max-width: 300px;
+    float: left;
+    display: flex;
+    flex-wrap: wrap;
+    flex-flow: row wrap;
+}
+
+.part {
+    display: block;
+    position: relative;
+    width: 3.5vw;
+    height: 3.5vw;
+    max-width: 50px;
+    max-height: 50px;
+}
+
+.partInner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    height: 90%;
+    border-radius: 3px;
+    background-color: #34b7eb;
+}
+
+.ship {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+
+.rotated {
+    flex-direction: column;
+}
+
+.clickDetect {
+    z-index: 100;
+    position: absolute;
+    border: solid 5px #34b7eb;
+    opacity: 0;
+    width: 70vw;
+    height: 70vw;
+    max-width: 700px;
+    max-height: 700px;
+    bottom: 0;
+    display: flex;
+    flex-wrap: wrap;
+    flex-flow: row wrap;
+}
+
+.clicker {
+    z-index: 50;
+    position: relative;
+    width: 10vw;
+    height: 100%;
+    max-width: 100px;
+}
+
+.interactive {
+    position: relative;
+    margin: 20px;
+    width: 70vw;
+    height: 70vw;
+    max-width: 700px;
+    max-height: 700px;
+}
+
+.highlighted {
+    background-color: #8ec9e0;
+}
+
+@media only screen and (max-width: 550px) {
+    .homeBattlefield {
+        float: none;
+    }
+
+    #oppBoard {
+        float: none;
+    }
+
+    .battlefield {
+        margin: 10px;
+        width: 70vw;
+        height: 70vw;
+        max-width: 500px;
+        max-height: 500px;
+        border: solid 5px #34b7eb;
+        display: flex;
+        flex-wrap: wrap;
+        flex-flow: column wrap;
+    }
+
+    .shipPanel {
+        display: flex;
+        justify-content: center;
+        position: relative;
+        width: 7vw;
+        height: 7vw;
+        max-width: 50px;
+        max-height: 50px;
+        background-color: #eee;
+        outline: 1px solid #333;
+    }
+
+    .part {
+        display: block;
+        position: relative;
+        width: 7vw;
+        height: 7vw;
+        max-width: 50px;
+        max-height: 50px;
+    }
+}

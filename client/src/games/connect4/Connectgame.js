@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { setOpponent } from '../../redux/actions/opponentActions';
+import { setUserStats, getUserStats } from '../../redux/actions/userActions';
 import io from 'socket.io-client';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -26,10 +27,27 @@ class Connectgame extends Component {
             lost: false,
             won: false,
             draw: false,
+            startTime: null,
+            movesMade: 0,
             onlinePlayers: 0,
             roomCode: '',
         };
     }
+
+    handleChange = (e) => {
+        this.setState({
+            [e.target.name]: e.target.value,
+        });
+    };
+
+    customGame = (e) => {
+        e.preventDefault();
+        let room = this.state.code;
+        if (this.state.joinedRoom) {
+            const user = this.state.user;
+            socket.emit('waiting', { user, room });
+        }
+    };
 
     componentDidUpdate(prevProps) {
         if (this.props.user.credentials.handle !== prevProps.user.credentials.handle) {
@@ -43,7 +61,8 @@ class Connectgame extends Component {
     }
 
     componentDidMount() {
-        socket = io('http://192.168.1.106:5000' || 'http://localhost:5000');
+        socket = io('http://192.168.1.106:5000' || 'http://localhost:5000'); //use when developing
+        //socket = io(); // use when deploying to heroku
 
         if (this.props.user.credentials.handle) {
             const user = this.props.user.credentials.handle;
@@ -74,8 +93,11 @@ class Connectgame extends Component {
                     [0, 0, 0, 0, 0, 0],
                 ],
             });
+            let time = new Date();
+            this.setState({ startTime: time });
             this.setState({ joinedMatch: true });
             this.setState({ matchRoom: room });
+            this.props.getUserStats();
             console.log(`joined match ${room}`);
         });
 
@@ -90,7 +112,6 @@ class Connectgame extends Component {
         });
 
         socket.on('sendMove', (move) => {
-            console.log(move);
             this.onlineMove(move);
             this.gameOver(move);
         });
@@ -120,28 +141,75 @@ class Connectgame extends Component {
         console.log('moved');
     }
 
+    updateStats(win) {
+        let finalTime = new Date();
+        let elapsed = (finalTime.getTime() - this.state.startTime.getTime()) / 1000;
+        let placeholder = this.props.stats;
+        placeholder.connect4.gamesPlayed = placeholder.connect4.gamesPlayed + 1;
+        placeholder.connect4.hoursPlayed = placeholder.connect4.hoursPlayed + elapsed;
+        placeholder.connect4.movesMade = placeholder.connect4.movesMade + this.state.movesMade;
+        if (win) {
+            placeholder.connect4.gamesWon = placeholder.connect4.gamesWon + 1;
+            placeholder.connect4.winTimes = placeholder.connect4.winTimes + elapsed;
+            placeholder.connect4.winMoves = placeholder.connect4.winMoves + this.state.movesMade;
+            placeholder.recent.winLoss = 'Win';
+        } else {
+            placeholder.recent.winLoss = 'Loss';
+        }
+        placeholder.recent.game = 'Connect 4';
+        placeholder.recent.movesMade = this.state.movesMade;
+        placeholder.recent.opponent = this.props.opponent.opponent.handle;
+        placeholder.recent.timePlayed = elapsed;
+
+        this.props.setUserStats(placeholder);
+    }
+
     gameOver(board) {
         let yellow;
         let red;
+        let count;
         for (let i = 0; i < 7; i++) {
             for (let j = 0; j < 6; j++) {
                 if (board[i][j] === 1) {
                     red++;
+                    count++;
                 } else {
                     red = 0;
                 }
 
                 if (board[i][j] === 2) {
                     yellow++;
+                    count++;
                 } else {
                     yellow = 0;
                 }
 
                 if (yellow >= 4) {
-                    console.log('yellow wins');
+                    if (this.state.player === 'black') {
+                        this.setState({ won: true });
+                        this.setState({ myMove: false });
+                        this.updateStats(true);
+                    } else {
+                        this.setState({ lost: true });
+                        this.setState({ myMove: false });
+                        this.updateStats(false);
+                    }
                 }
                 if (red >= 4) {
-                    console.log('red wins');
+                    if (this.state.player === 'white') {
+                        this.setState({ won: true });
+                        this.setState({ myMove: false });
+                        this.updateStats(true);
+                    } else {
+                        this.setState({ lost: true });
+                        this.setState({ myMove: false });
+                        this.updateStats(false);
+                    }
+                }
+                if (count >= 42) {
+                    this.setState({ draw: true });
+                    this.setState({ myMove: false });
+                    this.updateStats(false);
                 }
             }
         }
@@ -161,10 +229,198 @@ class Connectgame extends Component {
                 }
 
                 if (yellow >= 4) {
-                    console.log('yellow wins');
+                    if (this.state.player === 'black') {
+                        this.setState({ won: true });
+                        this.setState({ myMove: false });
+                        this.updateStats(true);
+                    } else {
+                        this.setState({ lost: true });
+                        this.setState({ myMove: false });
+                        this.updateStats(false);
+                    }
                 }
                 if (red >= 4) {
-                    console.log('red wins');
+                    if (this.state.player === 'white') {
+                        this.setState({ won: true });
+                        this.setState({ myMove: false });
+                        this.updateStats(true);
+                    } else {
+                        this.setState({ lost: true });
+                        this.setState({ myMove: false });
+                        this.updateStats(false);
+                    }
+                }
+            }
+        }
+
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 7; j++) {
+                if (i + j >= 6) {
+                    break;
+                }
+
+                if (board[j][i + j] === 1) {
+                    red++;
+                } else {
+                    red = 0;
+                }
+
+                if (board[j][i + j] === 2) {
+                    yellow++;
+                } else {
+                    yellow = 0;
+                }
+
+                if (yellow >= 4) {
+                    if (this.state.player === 'black') {
+                        this.setState({ won: true });
+                        this.setState({ myMove: false });
+                        this.updateStats(true);
+                    } else {
+                        this.setState({ lost: true });
+                        this.setState({ myMove: false });
+                        this.updateStats(false);
+                    }
+                }
+                if (red >= 4) {
+                    if (this.state.player === 'white') {
+                        this.setState({ won: true });
+                        this.setState({ myMove: false });
+                        this.updateStats(true);
+                    } else {
+                        this.setState({ lost: true });
+                        this.setState({ myMove: false });
+                        this.updateStats(false);
+                    }
+                }
+            }
+        }
+
+        for (let i = 1; i < 4; i++) {
+            for (let j = 0; j < 7; j++) {
+                if (i + j >= 7) {
+                    break;
+                }
+
+                if (board[i + j][j] === 1) {
+                    red++;
+                } else {
+                    red = 0;
+                }
+
+                if (board[i + j][j] === 2) {
+                    yellow++;
+                } else {
+                    yellow = 0;
+                }
+
+                if (yellow >= 4) {
+                    if (this.state.player === 'black') {
+                        this.setState({ won: true });
+                        this.setState({ myMove: false });
+                        this.updateStats(true);
+                    } else {
+                        this.setState({ lost: true });
+                        this.setState({ myMove: false });
+                        this.updateStats(false);
+                    }
+                }
+                if (red >= 4) {
+                    if (this.state.player === 'white') {
+                        this.setState({ won: true });
+                        this.setState({ myMove: false });
+                        this.updateStats(true);
+                    } else {
+                        this.setState({ lost: true });
+                        this.setState({ myMove: false });
+                        this.updateStats(false);
+                    }
+                }
+            }
+        }
+
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 7; j++) {
+                if (i + j >= 6) {
+                    break;
+                }
+
+                if (board[5 - j][i + j] === 1) {
+                    red++;
+                } else {
+                    red = 0;
+                }
+
+                if (board[5 - j][i + j] === 2) {
+                    yellow++;
+                } else {
+                    yellow = 0;
+                }
+
+                if (yellow >= 4) {
+                    if (this.state.player === 'black') {
+                        this.setState({ won: true });
+                        this.setState({ myMove: false });
+                        this.updateStats(true);
+                    } else {
+                        this.setState({ lost: true });
+                        this.setState({ myMove: false });
+                        this.updateStats(false);
+                    }
+                }
+                if (red >= 4) {
+                    if (this.state.player === 'white') {
+                        this.setState({ won: true });
+                        this.setState({ myMove: false });
+                        this.updateStats(true);
+                    } else {
+                        this.setState({ lost: true });
+                        this.setState({ myMove: false });
+                        this.updateStats(false);
+                    }
+                }
+            }
+        }
+
+        for (let i = 1; i < 4; i++) {
+            for (let j = 0; j < 7; j++) {
+                if (i + j >= 7) {
+                    break;
+                }
+
+                if (board[6 - (i + j)][j] === 1) {
+                    red++;
+                } else {
+                    red = 0;
+                }
+
+                if (board[6 - (i + j)][j] === 2) {
+                    yellow++;
+                } else {
+                    yellow = 0;
+                }
+
+                if (yellow >= 4) {
+                    if (this.state.player === 'black') {
+                        this.setState({ won: true });
+                        this.setState({ myMove: false });
+                        this.updateStats(true);
+                    } else {
+                        this.setState({ lost: true });
+                        this.setState({ myMove: false });
+                        this.updateStats(false);
+                    }
+                }
+                if (red >= 4) {
+                    if (this.state.player === 'white') {
+                        this.setState({ won: true });
+                        this.setState({ myMove: false });
+                        this.updateStats(true);
+                    } else {
+                        this.setState({ lost: true });
+                        this.setState({ myMove: false });
+                        this.updateStats(false);
+                    }
                 }
             }
         }
@@ -185,6 +441,16 @@ class Connectgame extends Component {
                 const room = 'connect';
                 socket.emit('stopSearch', { user, room });
             }
+        };
+
+        const makeRoom = () => {
+            var result = '';
+            var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            var charactersLength = characters.length;
+            for (var i = 0; i < 6; i++) {
+                result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            }
+            this.setState({ customRoom: result });
         };
 
         const handleClick = (e) => {
@@ -208,6 +474,7 @@ class Connectgame extends Component {
             }
 
             if (this.state.myMove && allowMove) {
+                this.setState({ movesMade: this.state.movesMade + 1 });
                 socket.emit('sendMove', { currentmove, matchRoom });
                 this.setState({ currentBoard: currentmove });
                 this.setState({ myMove: false });
@@ -275,11 +542,25 @@ class Connectgame extends Component {
             );
         } else {
             return (
-                <div style={{ textAlign: 'center' }}>
+                <div style={{ textAlign: 'center' }} className="BG">
+                    <nav>
+                        <ul>
+                            <li>
+                                <Link to="/app">
+                                    <h3 className="pageTitle ">boredGames</h3>
+                                </Link>
+                            </li>
+                            <li></li>
+                        </ul>
+                    </nav>
+                    <h3 className="popGames">Connect</h3>
+                    <div className="divider"></div>
                     {this.state.user && !this.state.loading && (
-                        <button className="btn" onClick={newGame}>
-                            Find Match
-                        </button>
+                        <div>
+                            <button className="btn" onClick={newGame}>
+                                Find Match
+                            </button>
+                        </div>
                     )}
                     {this.state.user && this.state.loading && (
                         <button className="btn" onClick={stopSearch}>
@@ -287,7 +568,23 @@ class Connectgame extends Component {
                         </button>
                     )}
                     {this.state.loading && <h3 className="load">Loading...</h3>}
-                    <h4 style={{ marginBottom: '1rem' }}>Players online: {this.state.onlinePlayers}</h4>
+                    <h4 style={{ marginBottom: '1rem', color: 'white' }}>Players online: {this.state.onlinePlayers}</h4>
+
+                    <div>
+                        <h3 className="popGames">Custom Match</h3>
+                        <button className="btn" onClick={makeRoom}>
+                            Generate Code
+                        </button>
+                        {this.state.customRoom && <h3>{this.state.customRoom}</h3>}
+                        <div className="inputCode">
+                            <form noValidate onSubmit={this.customGame}>
+                                <input value={this.state.users} id="code" type="text" name="code" className="input" placeholder="input code" onChange={this.handleChange} />
+                                <button type="submit" className="btn">
+                                    Join
+                                </button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             );
         }
@@ -297,12 +594,16 @@ class Connectgame extends Component {
 const mapStateToProps = (state) => ({
     user: state.user,
     opponent: state.opponent,
+    stats: state.statistics.stats,
 });
 
 Connectgame.propTypes = {
     user: PropTypes.object.isRequired,
+    statistics: PropTypes.object.isRequired,
     opponent: PropTypes.object.isRequired,
     setOpponent: PropTypes.func.isRequired,
+    setUserStats: PropTypes.func.isRequired,
+    getUserStats: PropTypes.func.isRequired,
 };
 
-export default connect(mapStateToProps, { setOpponent })(Connectgame);
+export default connect(mapStateToProps, { setOpponent, setUserStats, getUserStats })(Connectgame);

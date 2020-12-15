@@ -67,7 +67,7 @@
 }
 
 .clicker {
-    z-index: 100;
+    z-index: 50;
     position: relative;
     width: 10vw;
     height: 100%;

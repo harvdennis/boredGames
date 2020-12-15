@@ -4,6 +4,7 @@ import userReducer from './reducers/userReducer';
 import uiReducer from './reducers/uiReducer';
 import friendReducer from './reducers/friendReducer';
 import opponentReducer from './reducers/opponentReducer';
+import statsReducer from './reducers/statsReducer';
 
 const initialState = {};
 
@@ -14,6 +15,7 @@ const reducers = combineReducers({
     friends: friendReducer,
     UI: uiReducer,
     opponent: opponentReducer,
+    statistics: statsReducer,
 });
 
 const composeEnhancers =

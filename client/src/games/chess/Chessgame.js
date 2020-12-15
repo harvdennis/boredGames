@@ -3,6 +3,7 @@ import Chessboard from './chessboard';
 import './chessboard.css';
 import { Link } from 'react-router-dom';
 import { setOpponent } from '../../redux/actions/opponentActions';
+import { setUserStats, getUserStats } from '../../redux/actions/userActions';
 
 import io from 'socket.io-client';
 import PropTypes from 'prop-types';
@@ -36,11 +37,29 @@ class Chessgame extends Component {
             lost: false,
             won: false,
             draw: false,
+            startTime: null,
+            movesMade: 0,
             inCheck: false,
             onlinePlayers: 0,
             roomCode: '',
+            customRoom: null,
         };
     }
+
+    handleChange = (e) => {
+        this.setState({
+            [e.target.name]: e.target.value,
+        });
+    };
+
+    customGame = (e) => {
+        e.preventDefault();
+        let room = this.state.code;
+        if (this.state.joinedRoom) {
+            const user = this.state.user;
+            socket.emit('waiting', { user, room });
+        }
+    };
 
     componentDidUpdate(prevProps) {
         if (this.props.user.credentials.handle !== prevProps.user.credentials.handle) {
@@ -54,7 +73,9 @@ class Chessgame extends Component {
     }
 
     componentDidMount() {
-        socket = io('http://192.168.1.106:5000' || 'http://localhost:5000');
+        socket = io('http://192.168.1.106:5000' || 'http://localhost:5000'); //use when developing
+
+        //socket = io(); //use when deploying to heroku
 
         if (this.props.user.credentials.handle) {
             const user = this.props.user.credentials.handle;
@@ -76,9 +97,12 @@ class Chessgame extends Component {
         socket.on('joinedMatch', (room) => {
             this.chess = new Chess();
             this.checkingMove = new Chess();
+            let time = new Date();
+            this.setState({ startTime: time });
             this.setState({ currentFen: this.chess.fen() });
             this.setState({ joinedMatch: true });
             this.setState({ matchRoom: room });
+            this.props.getUserStats();
             console.log(`joined match ${room}`);
         });
 
@@ -168,26 +192,55 @@ class Chessgame extends Component {
         }
     }
 
+    updateStats(win) {
+        let finalTime = new Date();
+        let elapsed = (finalTime.getTime() - this.state.startTime.getTime()) / 1000;
+        let placeholder = this.props.stats;
+        placeholder.chess.gamesPlayed = placeholder.chess.gamesPlayed + 1;
+        placeholder.chess.hoursPlayed = placeholder.chess.hoursPlayed + elapsed;
+        placeholder.chess.movesMade = placeholder.chess.movesMade + this.state.movesMade;
+        if (win) {
+            placeholder.chess.gamesWon = placeholder.chess.gamesWon + 1;
+            placeholder.chess.winTimes = placeholder.chess.winTimes + elapsed;
+            placeholder.chess.winMoves = placeholder.chess.winMoves + this.state.movesMade;
+            placeholder.recent.winLoss = 'Win';
+        } else {
+            placeholder.recent.winLoss = 'Loss';
+        }
+        placeholder.recent.game = 'Chess';
+        placeholder.recent.movesMade = this.state.movesMade;
+        placeholder.recent.opponent = this.props.opponent.opponent.handle;
+        placeholder.recent.timePlayed = elapsed;
+
+        this.props.setUserStats(placeholder);
+    }
+
     gameOver(chess) {
         if (chess.in_checkmate()) {
             let loser = chess.fen().split(' ')[1];
             if (loser === 'w') {
                 if (this.state.player === 'white') {
                     this.setState({ lost: true });
+                    this.updateStats(false);
                 } else {
                     this.setState({ won: true });
+                    this.updateStats(true);
                 }
             } else if (loser === 'b') {
                 if (this.state.player === 'black') {
                     this.setState({ lost: true });
+                    this.updateStats(false);
                 } else {
                     this.setState({ won: true });
+                    this.updateStats(true);
                 }
             }
         } else if (chess.in_draw()) {
             this.setState({ draw: true });
+            this.updateStats(false);
         } else if (chess.in_stalemate()) {
             this.setState({ draw: true });
+            this.updateStats(false);
         }
     }
 
@@ -247,6 +300,16 @@ class Chessgame extends Component {
             }
         };
 
+        const makeRoom = () => {
+            var result = '';
+            var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            var charactersLength = characters.length;
+            for (var i = 0; i < 6; i++) {
+                result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            }
+            this.setState({ customRoom: result });
+        };
+
         const getPeice = (e) => {
             let targetPeice;
             let peicePanel;
@@ -276,6 +339,7 @@ class Chessgame extends Component {
                 let currentmove = this.chess.fen();
                 let matchRoom = this.state.matchRoom;
                 if (this.state.currentFen !== this.chess.fen()) {
+                    this.setState({ movesMade: this.state.movesMade + 1 });
                     socket.emit('sendMove', { currentmove, matchRoom });
                 }
                 this.setState({ currentFen: this.chess.fen() });
@@ -317,6 +381,7 @@ class Chessgame extends Component {
                     let currentmove = this.chess.fen();
                     let matchRoom = this.state.matchRoom;
                     if (this.state.currentFen !== this.chess.fen()) {
+                        this.setState({ movesMade: this.state.movesMade + 1 });
                         socket.emit('sendMove', { currentmove, matchRoom });
                     }
                     this.setState({ currentFen: this.chess.fen() });
@@ -350,6 +415,7 @@ class Chessgame extends Component {
                         let currentmove = this.chess.fen();
                         let matchRoom = this.state.matchRoom;
                         if (this.state.currentFen !== this.chess.fen()) {
+                            this.setState({ movesMade: this.state.movesMade + 1 });
                             socket.emit('sendMove', { currentmove, matchRoom });
                         }
                         this.setState({ currentFen: this.chess.fen() });
@@ -449,11 +515,25 @@ class Chessgame extends Component {
             );
         } else {
             return (
-                <div style={{ textAlign: 'center' }}>
+                <div style={{ textAlign: 'center' }} className="BG">
+                    <nav>
+                        <ul>
+                            <li>
+                                <Link to="/app">
+                                    <h3 className="pageTitle ">boredGames</h3>
+                                </Link>
+                            </li>
+                            <li></li>
+                        </ul>
+                    </nav>
+                    <h3 className="popGames">Chess</h3>
+                    <div className="divider"></div>
                     {this.state.user && !this.state.loading && (
-                        <button className="btn" onClick={newGame}>
-                            Find Match
-                        </button>
+                        <div>
+                            <button className="btn" onClick={newGame}>
+                                Find Match
+                            </button>
+                        </div>
                     )}
                     {this.state.user && this.state.loading && (
                         <button className="btn" onClick={stopSearch}>
@@ -461,7 +541,22 @@ class Chessgame extends Component {
                         </button>
                     )}
                     {this.state.loading && <h3 className="load">Loading...</h3>}
-                    <h4 style={{ marginBottom: '1rem' }}>Players online: {this.state.onlinePlayers}</h4>
+                    <h4 style={{ marginBottom: '1rem', color: 'white' }}>Players online: {this.state.onlinePlayers}</h4>
+                    <div>
+                        <h3 className="popGames">Custom Match</h3>
+                        <button className="btn" onClick={makeRoom}>
+                            Generate Code
+                        </button>
+                        {this.state.customRoom && <h3>{this.state.customRoom}</h3>}
+                        <div className="inputCode">
+                            <form noValidate onSubmit={this.customGame}>
+                                <input value={this.state.users} id="code" type="text" name="code" className="input" placeholder="input code" onChange={this.handleChange} />
+                                <button type="submit" className="btn">
+                                    Join
+                                </button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             );
         }
@@ -471,12 +566,16 @@ class Chessgame extends Component {
 const mapStateToProps = (state) => ({
     user: state.user,
     opponent: state.opponent,
+    stats: state.statistics.stats,
 });
 
 Chessgame.propTypes = {
     user: PropTypes.object.isRequired,
+    statistics: PropTypes.object.isRequired,
     opponent: PropTypes.object.isRequired,
     setOpponent: PropTypes.func.isRequired,
+    setUserStats: PropTypes.func.isRequired,
+    getUserStats: PropTypes.func.isRequired,
 };
 
-export default connect(mapStateToProps, { setOpponent })(Chessgame);
+export default connect(mapStateToProps, { setOpponent, setUserStats, getUserStats })(Chessgame);

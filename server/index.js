@@ -84,6 +84,10 @@ io.on('connection', (socket) => {
         socket.to(matchRoom).emit('sendMove', currentmove);
     });
 
+    socket.on('battleBoard', ({ board, matchRoom }) => {
+        socket.to(matchRoom).emit('setOppBoard', board);
+    });
+
     socket.on('disconnect', function () {
         delete people[socket.id];
         delete peopleWaiting[socket.id];

@@ -4,13 +4,14 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { logoutUser } from '../redux/actions/userActions';
 import { searchUser, checkFriend, addFriend, getFriends } from '../redux/actions/friendActions';
-import Person from './../components/Person';
 import Loader from './../components/Loader';
 import './../styles/App.css';
 import './../styles/games.css';
 import settings from './../styles/settings-24px.svg';
 import close from './../styles/close.svg';
 import chess from './game-imgs/chess.PNG';
+import connect4 from './game-imgs/connect4.PNG';
+import battleship from './game-imgs/battleship.PNG';
 import firebase from '../services/util/config';
 
 const realdb = firebase.database();
@@ -51,8 +52,15 @@ export class AppHome extends Component {
     };
 
     render() {
+        let noStats;
         let friends;
         let friendArr;
+        let stats;
+        if (this.props.stats.recent) {
+            stats = this.props.stats;
+        } else {
+            stats = false;
+        }
         if (typeof this.props.friendList === 'string') {
             friends = this.props.friendList;
         } else {
@@ -101,12 +109,31 @@ export class AppHome extends Component {
                         </Link>
                         <Link to="/games/connect" className="game-link">
                             <div className="selector">
-                                <img src={chess} alt="chess" className="selector-img" />
+                                <img src={connect4} alt="connect4" className="selector-img" />
+                            </div>
+                        </Link>
+                        <Link to="/games/battle" className="game-link">
+                            <div className="selector">
+                                <img src={battleship} alt="connect4" className="selector-img" />
                             </div>
                         </Link>
                     </div>
                     <Link to="/games">
                         <button className="moreGames">See All Games</button>
+                    </Link>
+                </div>
+                <div className="contain">
+                    <h3 className="popGames">Recent Stats</h3>
+                    <div className="divider"></div>
+                    <div className="statsList">
+                        <h3 className="stat">Game: {stats ? stats.recent.game : 'Loading...'}</h3>
+                        <h3 className="stat">Opponent: {stats ? stats.recent.opponent : 'Loading...'}</h3>
+                        <h3 className="stat">Outcome: {stats ? stats.recent.winLoss : 'Loading...'}</h3>
+                        <h3 className="stat">Moves Made: {stats ? stats.recent.movesMade : 'Loading...'}</h3>
+                        <h3 className="stat">Time Played: {stats ? stats.recent.timePlayed.toFixed(0) : 'Loading...'} seconds</h3>
+                    </div>
+                    <Link to="/stats">
+                        <button className="moreGames">See More Statistics</button>
                     </Link>
                 </div>
                 <div className="people">
@@ -150,6 +177,7 @@ const mapStateToProps = (state) => ({
     authenticated: state.user.authenticated,
     UI: state.UI,
     credentials: state.user.credentials,
+    stats: state.statistics.stats,
     friendList: state.friends.friendList,
     friendData: state.friends.friendData,
     searchedFriend: state.friends.searchedFriend,
@@ -160,6 +188,7 @@ AppHome.propTypes = {
     user: PropTypes.object,
     UI: PropTypes.object.isRequired,
     friends: PropTypes.object,
+    statistics: PropTypes.object.isRequired,
     logoutUser: PropTypes.func.isRequired,
     searchUser: PropTypes.func.isRequired,
     checkFriend: PropTypes.func.isRequired,

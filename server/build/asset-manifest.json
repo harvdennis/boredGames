@@ -1,17 +1,20 @@
 {
   "files": {
-    "main.css": "/static/css/main.8d696e52.chunk.css",
-    "main.js": "/static/js/main.e62e59cc.chunk.js",
-    "main.js.map": "/static/js/main.e62e59cc.chunk.js.map",
+    "main.css": "/static/css/main.41fb7110.chunk.css",
+    "main.js": "/static/js/main.ac1bf870.chunk.js",
+    "main.js.map": "/static/js/main.ac1bf870.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.98a2b520.js",
     "runtime-main.js.map": "/static/js/runtime-main.98a2b520.js.map",
-    "static/js/2.bc47b855.chunk.js": "/static/js/2.bc47b855.chunk.js",
-    "static/js/2.bc47b855.chunk.js.map": "/static/js/2.bc47b855.chunk.js.map",
+    "static/js/2.f69d7ca7.chunk.js": "/static/js/2.f69d7ca7.chunk.js",
+    "static/js/2.f69d7ca7.chunk.js.map": "/static/js/2.f69d7ca7.chunk.js.map",
     "index.html": "/index.html",
-    "precache-manifest.85f2d29c229078e9d53343bc572f0941.js": "/precache-manifest.85f2d29c229078e9d53343bc572f0941.js",
+    "precache-manifest.ae0ecf7a7567b5ab0b9be7c1b7554d0b.js": "/precache-manifest.ae0ecf7a7567b5ab0b9be7c1b7554d0b.js",
     "service-worker.js": "/service-worker.js",
-    "static/css/main.8d696e52.chunk.css.map": "/static/css/main.8d696e52.chunk.css.map",
-    "static/js/2.bc47b855.chunk.js.LICENSE.txt": "/static/js/2.bc47b855.chunk.js.LICENSE.txt",
+    "static/css/main.41fb7110.chunk.css.map": "/static/css/main.41fb7110.chunk.css.map",
+    "static/js/2.f69d7ca7.chunk.js.LICENSE.txt": "/static/js/2.f69d7ca7.chunk.js.LICENSE.txt",
+    "static/media/home.css": "/static/media/BG.7822b0c8.svg",
+    "static/media/Bishop.svg": "/static/media/Bishop.255a39db.svg",
+    "static/media/battleship.PNG": "/static/media/battleship.d7bfb940.PNG",
     "static/media/bb.svg": "/static/media/bb.8011bf44.svg",
     "static/media/bk.svg": "/static/media/bk.d8979832.svg",
     "static/media/bn.svg": "/static/media/bn.daa3de25.svg",
@@ -19,6 +22,10 @@
     "static/media/bq.svg": "/static/media/bq.ef6e2590.svg",
     "static/media/br.svg": "/static/media/br.08c3972b.svg",
     "static/media/chess.PNG": "/static/media/chess.248b0159.PNG",
+    "static/media/close.svg": "/static/media/close.bad80992.svg",
+    "static/media/connect4.PNG": "/static/media/connect4.c176bba0.PNG",
+    "static/media/Sign-Log.css": "/static/media/loginBG.e5772bfb.svg",
+    "static/media/settings-24px.svg": "/static/media/settings-24px.dd8af600.svg",
     "static/media/wb.svg": "/static/media/wb.1fe99b0c.svg",
     "static/media/wk.svg": "/static/media/wk.d0c846df.svg",
     "static/media/wn.svg": "/static/media/wn.07bc214c.svg",
@@ -28,8 +35,8 @@
   },
   "entrypoints": [
     "static/js/runtime-main.98a2b520.js",
-    "static/js/2.bc47b855.chunk.js",
-    "static/css/main.8d696e52.chunk.css",
-    "static/js/main.e62e59cc.chunk.js"
+    "static/js/2.f69d7ca7.chunk.js",
+    "static/css/main.41fb7110.chunk.css",
+    "static/js/main.ac1bf870.chunk.js"
   ]
 }

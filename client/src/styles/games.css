@@ -42,13 +42,30 @@
 
 .gamesBG {
     width: 100%;
-    height: 100vh;
+    min-height: 100vh;
+    height: auto;
     background-color: #1f305b;
     display: flex;
     justify-content: space-around;
 }
 
-.gameSelector {
-    height: calc(100vh - 100px);
-    margin-top: 100px;
+.gameGrid {
+    margin-top: 110px;
+    display: flex;
+}
+
+@media only screen and (max-width: 800px) {
+    .selector {
+        width: 80vw;
+        height: 80vw;
+        max-width: 30vh;
+        max-height: 30vh;
+    }
+}
+
+@media only screen and (max-width: 850px) {
+    .gameGrid {
+        margin-top: 110px;
+        display: block;
+    }
 }

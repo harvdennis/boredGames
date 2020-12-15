@@ -5,8 +5,10 @@ import Signup from './pages/Signup';
 import Home from './pages/Home';
 import AppHome from './pages/AppHome';
 import Games from './pages/Games';
+import stats from './pages/Stats';
 import chess from './games/chess/Chessgame';
 import connect4 from './games/connect4/Connectgame';
+import battleships from './games/battleships/BattleGame';
 import AuthRoute from './util/AuthRoute';
 import AuthedRoute from './util/AuthedRoute';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
@@ -14,7 +16,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './redux/store';
 import { SET_AUTHENTICATED } from './redux/types';
-import { getUserData, logoutUser } from './redux/actions/userActions';
+import { getUserData, getUserStats, logoutUser } from './redux/actions/userActions';
 import { getFriends } from './redux/actions/friendActions';
 import firebase from './services/util/config';
 import { connect } from 'socket.io-client';
@@ -56,6 +58,7 @@ firebase.auth().onAuthStateChanged(function (user) {
         });
         store.dispatch({ type: SET_AUTHENTICATED });
         store.dispatch(getUserData());
+        store.dispatch(getUserStats());
         store.dispatch(getFriends());
     } else {
         store.dispatch(logoutUser());
@@ -73,8 +76,10 @@ function App() {
                         <AuthRoute exact path="/" component={Home} />
                         <AuthedRoute exact path="/app" component={AppHome} />
                         <AuthedRoute exact path="/games" component={Games} />
+                        <AuthedRoute exact path="/stats" component={stats} />
                         <AuthedRoute path="/games/chess" component={chess} />
                         <AuthedRoute path="/games/connect" component={connect4} />
+                        <AuthedRoute path="/games/battle" component={battleships} />
                     </div>
                 </div>
             </Router>
