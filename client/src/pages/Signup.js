@@ -22,31 +22,33 @@ export class signup extends Component {
     }
     componentWillReceiveProps(nextProps) {
         if (nextProps.UI.errors) {
-            this.setState({ errors: nextProps.UI.errors });
+            //checks if new props have loaded
+            this.setState({ errors: nextProps.UI.errors }); //sets the new props as the error state variable
         }
     }
     handleSubmit = (e) => {
-        e.preventDefault();
+        e.preventDefault(); // stops the page from refreshing
         this.setState({
             loading: true,
-        });
+        }); //laoding set to true
         const userData = {
             email: this.state.email,
             password: this.state.password,
             confirmPassword: this.state.confirmPassword,
             handle: this.state.handle,
         };
-        this.props.signupUser(userData, this.props.history);
+        this.props.signupUser(userData, this.props.history); //the redux funtion signup user is called with userData as an argument
     };
 
     handleChange = (e) => {
+        //funtion used to allow inputs to work
         this.setState({
-            [e.target.name]: e.target.value,
+            [e.target.name]: e.target.value, //this funtion is called after every keystroke and updates the value of each input
         });
     };
+
     render() {
-        const { classes } = this.props;
-        const { loading, errors } = this.state;
+        const { errors } = this.state; //errors are taken from the state
         return (
             <div className="log-sign">
                 <h1 className="log-title">boredGames</h1>
@@ -84,7 +86,7 @@ export class signup extends Component {
                         </div>
                         <p className="errors error">{errors.confirmPassword}</p>
                         <div className={errors.handle || errors.general ? 'error field' : 'field'}>
-                            <input value={this.state.handle} id="handle" type="text" name="handle" className="input" placeholder=" " onChange={this.handleChange} maxlength="12" />
+                            <input value={this.state.handle} id="handle" type="text" name="handle" className="input" placeholder=" " onChange={this.handleChange} maxlength="20" />
                             <label htmlFor="username" className="label">
                                 Username
                             </label>
@@ -109,18 +111,16 @@ export class signup extends Component {
 }
 
 signup.propTypes = {
+    //maps the redux state to the components props
     signupUser: PropTypes.func.isRequired,
     user: PropTypes.object.isRequired,
     UI: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
+    //defines the types of each prop so no unwanted errors occur
     user: state.user,
     UI: state.UI,
 });
 
-const mapActionsToProps = {
-    signupUser,
-};
-
-export default connect(mapStateToProps, { signupUser })(signup);
+export default connect(mapStateToProps, { signupUser })(signup); //connect links react and redux together so they can be used together

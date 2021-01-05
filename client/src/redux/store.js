@@ -4,7 +4,7 @@ import userReducer from './reducers/userReducer';
 import uiReducer from './reducers/uiReducer';
 import friendReducer from './reducers/friendReducer';
 import opponentReducer from './reducers/opponentReducer';
-import statsReducer from './reducers/statsReducer';
+import statsReducer from './reducers/statsReducer'; //reducers are imported
 
 const initialState = {};
 
@@ -16,20 +16,12 @@ const reducers = combineReducers({
     UI: uiReducer,
     opponent: opponentReducer,
     statistics: statsReducer,
-});
+}); //combines all the reducers
 
-const composeEnhancers =
-    typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
-        ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
-              // Specify extension’s options like name, actionsBlacklist, actionsCreators, serialize...
-          })
-        : compose;
+const composeEnhancers = typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({}) : compose; //allows me to use the redux devolper tool
 
-const enhancer = composeEnhancers(
-    applyMiddleware(...middleware)
-    // other store enhancers if any
-);
+const enhancer = composeEnhancers(applyMiddleware(...middleware));
 
-const store = createStore(reducers, initialState, enhancer);
+const store = createStore(reducers, initialState, enhancer); //creates a redux store using the reducers
 
 export default store;

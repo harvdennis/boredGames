@@ -11,6 +11,7 @@ const isEmpty = (text) => {
 const isEmail = (email) => {
     const emailRegEx = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (email.match(emailRegEx)) {
+        //the regex above checks that the input is in a proper email format eg user@domain.com
         return true;
     } else {
         return false;
@@ -29,16 +30,19 @@ exports.validateSignupData = (data) => {
     if (isEmpty(data.password)) {
         errors.password = 'Must not be empty';
     }
+    if (isEmpty(data.confirmPassword)) {
+        errors.confirmPassword = 'Must not be empty';
+    }
     if (data.password !== data.confirmPassword) {
         errors.confirmPassword = 'passwords must match';
     }
     if (isEmpty(data.handle)) {
         errors.handle = 'Must not be empty';
-    }
+    } //returns all the errors that can be caught through validation
     return {
         errors,
         valid: Object.keys(errors).length === 0 ? true : false,
-    };
+    }; //if there are no errors valid is true else valid is false
 };
 
 exports.validateLoginData = (data) => {
@@ -50,18 +54,10 @@ exports.validateLoginData = (data) => {
     }
     if (isEmpty(data.password)) {
         errors.password = 'Must not be empty';
-    }
+    } //returns all the errors that can be caught through validation
 
     return {
         errors,
         valid: Object.keys(errors).length === 0 ? true : false,
-    };
-};
-
-exports.reduceUserDetails = (data) => {
-    let userDetails = {};
-    if (!isEmpty(data.bio.trim())) userDetails.bio = data.bio;
-    if (!isEmpty(data.location.trim())) userDetails.location = data.location;
-    console.log(userDetails);
-    return userDetails;
+    }; //if there are no errors valid is true else valid is false
 };

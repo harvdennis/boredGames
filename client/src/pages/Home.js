@@ -11,9 +11,11 @@ export class Home extends Component {
                     <ul className="buttnCont">
                         <li className="buttn" id="log">
                             <Link to="/login">Login</Link>
+                            {/*links to login page*/}
                         </li>
                         <li className="buttn" id="sign">
                             <Link to="/signup">Sign Up</Link>
+                            {/*links to sign up page*/}
                         </li>
                     </ul>
                 </div>

@@ -70,6 +70,35 @@ nav {
 .settings {
     width: 35px;
     height: 35px;
+    transform: rotate(0deg);
+    transition: transform ease-in-out 0.4s;
+}
+
+.settings:hover {
+    cursor: pointer;
+}
+
+.set-rotate {
+    transform: rotate(100deg);
+}
+
+.delAcc {
+    position: absolute;
+    right: 15px;
+    z-index: 150;
+    top: 80px;
+    padding: 1.2rem;
+    border-radius: 10px;
+    box-shadow: 0px 1px15px 2px rgba(0, 0, 0, 0.55);
+    background-color: rgb(61, 99, 196);
+}
+
+.delAcc:hover {
+    cursor: pointer;
+}
+
+.delAcc h3 {
+    color: orangered;
 }
 
 #close {
@@ -269,6 +298,10 @@ h3 {
 }
 
 .inputCode form input {
+    outline: none;
+    border: none;
+    overflow: hidden;
+    font-size: 1.2rem;
     padding: 10px;
     border-radius: 20px;
     background-color: #0f131d;
@@ -276,6 +309,11 @@ h3 {
     height: 20px;
     width: 30%;
     margin: 30px auto;
+    color: white;
+}
+
+.userMove {
+    background: greenyellow;
 }
 
 @media only screen and (max-width: 800px) {

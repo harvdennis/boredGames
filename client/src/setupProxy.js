@@ -8,3 +8,5 @@ module.exports = function (app) {
         })
     );
 };
+
+/*This file allows for the application to access the firestore database without any errors occuring */

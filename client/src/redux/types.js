@@ -18,3 +18,5 @@ export const APPEND_FRIEND = 'APPEND_FRIEND';
 export const UPDATE_STATUS = 'UPDATE_STATUS';
 
 export const SET_OPPONENT = 'SET_OPPONENT';
+
+//all the types are defined here

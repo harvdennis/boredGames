@@ -1,8 +1,8 @@
-import { SET_STATS, UPDATE_STATS } from '../types';
+import { SET_STATS } from '../types';
 
 const initialState = {
     stats: {},
-};
+}; //the values for the intitial state
 
 export default function (state = initialState, action) {
     switch (action.type) {
@@ -10,7 +10,7 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 ...action.payload,
-            };
+            }; //updates the new stats
         default:
             return state;
     }
