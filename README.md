@@ -15,3 +15,4 @@ Unfortunately this project is now deprecated due to updates in react and node bu
 ![Signup](https://github.com/Harvest-8/boredGames/blob/main/photos/image8.png?raw=true)
 ![4inanrow](https://github.com/Harvest-8/boredGames/blob/main/photos/image34.png?raw=true)
 ![Chess](https://github.com/Harvest-8/boredGames/blob/main/photos/image14.png?raw=true)
+![Lobby](https://github.com/Harvest-8/boredGames/blob/main/photos/image82.png?raw=true)
